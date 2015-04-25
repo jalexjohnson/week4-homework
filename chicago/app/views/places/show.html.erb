@@ -25,8 +25,8 @@
 <h2><%= @place.title %></h2>
 
 <p>
-  <span class="price">Admission Price: <%= number_to_currency @place.price/100 %></span>
-  <%= link_to "Edit", "/places/#{@place.id}/edit" %>
+  <span class="price">Admission Price: <%= number_to_currency @place.price/100.0 %></span>
+  <%= link_to "Edit", edit_place_url(@place.id) %>
 </p>
 
 <div>
@@ -37,7 +37,8 @@
 <h3 style="clear:both; margin-top: 100px">Reviews</h3>
 
 <p>Write a review</p>
-<form action="/reviews/<%= @place.id %>/submit_new">
+<%= form_tag reviews_url do %>
+  <input type="hidden" name="place_id" value="<%= @place.id %>">
   <select name="rating">
     <option>5 star</option>
     <option>4 star</option>
@@ -47,9 +48,9 @@
   </select>
   <input name="desc" size="50">
   <button>Submit</button>
-</form>
+<% end %>
 
-<% Review.where(place_id: @place.id).order('id desc').each do |review| %>
+<% @reviews.each do |review| %>
   <p>
     <strong><%= ("&#9733;" * review.rating).html_safe  %></strong>
     <%= review.desc %>
